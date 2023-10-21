@@ -1,0 +1,30 @@
+version: '3.8'
+services:
+    homies:
+        ports:
+            - '80:80'
+        container_name: homies  
+        domainname: ilianaalexandrovahomiesapp #add      
+        image: ilianaalexandrovahomiesscr.azurecr.io/homies    #change    
+        restart: on-failure 
+    mssql:
+        environment:
+            - ACCEPT_EULA=Y
+            - MSSQL_SA_PASSWORD=myStrongPassword12#
+        ports:
+            - 1433:1433        
+        volumes:
+            - sqldata:/var/opt/mssql
+        container_name: sqlserver # as in the connection string
+        image: mcr.microsoft.com/mssql/server:latest
+        deploy:   #add
+          resources: 
+                reservations:
+                    cpus: '2'
+                    memory: '4GB'
+volumes:
+  sqldata: 
+      driver: azure_file   #add
+      driver_opts:
+        share_name: sql-volume
+        storage_account_name: homiesstorageacciliana
